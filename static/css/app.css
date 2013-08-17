@@ -1,0 +1,6 @@
+body {padding: 30px;}
+.navbar {margin-bottom: 30px;}
+/* custom css style: pageNum,cPageNum */  
+.pageNum{border: 0px solid #999;padding:2px 8px;display: inline-block;}  
+.cPageNum{font-weight: bold;padding:2px 5px;}  
+#pageNav a:hover{text-decoration:none;background: #fff4d8; }  
