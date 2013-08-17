@@ -2,7 +2,7 @@
 #encoding=utf-8
 
 from flask import Flask, render_template, request, jsonify
-from redismon import redis_server_info, r
+from redismon import redis_server_info, r, execute_redis_cli
 import json
 app = Flask(__name__)
 
@@ -20,6 +20,13 @@ def search_keys():
         param = param + '*'
     keys = r.keys(param)
     return json.dumps(keys)
+
+@app.route('/exec', methods=["POST"])
+def exec_redis_command():
+    param = request.form.get('cmd', '')
+    stdout, stderr = execute_redis_cli(param)
+    ret = {'stdout': stdout, 'stderr': stderr}
+    return json.dumps(ret)
 
 if __name__ == '__main__':
     app.debug = True
