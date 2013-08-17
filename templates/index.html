@@ -1,0 +1,141 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Navbar Template for Bootstrap</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="/static/bootstrap.css" rel="stylesheet">
+    <style>
+      body {
+      padding: 30px;
+      }
+       
+      .navbar {
+      margin-bottom: 30px;
+      }
+
+      /* custom css style: pageNum,cPageNum */  
+      .pageNum{border: 0px solid #999;padding:2px 8px;display: inline-block;}  
+      .cPageNum{font-weight: bold;padding:2px 5px;}  
+      #pageNav a:hover{text-decoration:none;background: #fff4d8; }  
+
+    </style>
+  </head>
+
+  <body>
+
+    <div class="container">
+
+      <!-- Static navbar -->
+      <div class="navbar">
+        <div class="container">
+          <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#">RedMoon</a>
+          </div>
+          <div class="navbar-collapse collapse">
+            
+             <form class="navbar-form navbar-left" role="search" action="javascript:void(0)">
+              <div class="form-group">
+                <input id="keys-input" type="text" class="form-control" placeholder="Keys"/>
+              </div>
+              <button id="search-btn" class="btn btn-default">Search</button>
+            </form>
+            <ul class="nav navbar-nav navbar-right">
+              <li><a href="#">Server Info</a></li>
+              <li><a href="#">Console</a></li>
+              <li><a href="#">About</a></li>
+            </ul>
+          </div><!--/.nav-collapse -->
+        </div>
+      </div>
+      <div id="search-result-container" style="display:none">
+      <div class="page-header">
+        <h3>Search Results for '<span id="kw"></span>'<small>&nbsp;&nbsp;&nbsp;<span id="result-count">0</span> items</small></h3>
+
+      </div>
+      <table id="search-result" class="table table-striped">
+          
+      </table>
+      <div id="pageNav"></div> 
+    </div>
+
+    </div> <!-- /container -->
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="/static/jquery.min.js"></script>
+    <script src="/static/bootstrap.min.js"></script>
+    <script src="/static/pagenav.js"></script>
+
+    <script>
+      $(document).ready(function() {
+          var count_per_page = 30;
+          var key_items = null;
+          var gotoPage = function(p) {
+            $('#search-result tr').remove()
+            $('#search-result').append('<tr><th>Key Name</th><th>Type</th></tr>')
+            for (var i = (p-1) * count_per_page ; i < p * count_per_page && i < key_items.length ; i++) {
+              $('#search-result').append('<tr><td>' + key_items[i] + '</td><td>' + i + '</td></tr>')
+            }
+          }
+          var initPageNav = function() {
+            pageNav.pre="<<";  
+            pageNav.next=">>";  
+            pageNav.fn = function(p,pn){
+              gotoPage(p)
+            };
+          }
+          initPageNav();
+          $('#keys-input').focus()
+          $('#keys-input').keyup(function(e) {
+            if (e.keyCode == 13) {
+              $('#search-btn').click()
+              if(!e) var e = window.event;
+
+              e.cancelBubble = true;
+              e.returnValue = false;
+
+              if (e.stopPropagation) {
+                e.stopPropagation();
+                e.preventDefault();
+              }
+            }
+          })
+          $('#search-btn').click(function(e){
+            var pattern = $('#keys-input').val() ? $('#keys-input').val() : '*';
+            $.post('/keys', { pattern: pattern }, function(v) {
+              $('#search-result-container').show();
+              var results = eval(v);
+              key_items = results.sort()
+              var page_count = results.length / count_per_page;
+              $('#kw').html(pattern)
+              $('#result-count').html(results.length ? results.length : 0)
+              console.log(page_count)
+              if (Math.ceil(page_count) >= 1) {
+                pageNav.go(1, Math.ceil(page_count));
+                if (Math.ceil(page_count) == 1) {
+                  $('#pageNav').html('')
+                }
+              } else {
+                $('#search-result tr').remove()
+                $('#pageNav').html('')
+              }
+            }) 
+          })
+      })
+
+    </script>
+  </body>
+</html>
