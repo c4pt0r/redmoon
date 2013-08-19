@@ -9,6 +9,7 @@ require.config({
  		router : '/static/js/router',
  		searchView : '/static/js/searchView',
  		naviBarView : '/static/js/naviBarView',
+ 		valueView : '/static/js/valueView',
  	},
  	shim: {
 	    underscore: {

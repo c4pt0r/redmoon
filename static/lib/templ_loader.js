@@ -1,9 +1,9 @@
-function render(tmpl_name, tmpl_data) {
-    if ( !render.tmpl_cache ) { 
-        render.tmpl_cache = {};
+function load_template(tmpl_name, tmpl_data) {
+    if ( !load_template.tmpl_cache ) { 
+        load_template.tmpl_cache = {};
     }
 
-    if ( ! render.tmpl_cache[tmpl_name] ) {
+    if ( ! load_template.tmpl_cache[tmpl_name] ) {
         var tmpl_dir = '/static/templates';
         var tmpl_url = tmpl_dir + '/' + tmpl_name + '.tpl';
 
@@ -17,8 +17,8 @@ function render(tmpl_name, tmpl_data) {
             }
         });
 
-        render.tmpl_cache[tmpl_name] = _.template(tmpl_string);
+        load_template.tmpl_cache[tmpl_name] = _.template(tmpl_string);
     }
 
-    return render.tmpl_cache[tmpl_name](tmpl_data);
+    return load_template.tmpl_cache[tmpl_name](tmpl_data);
 }

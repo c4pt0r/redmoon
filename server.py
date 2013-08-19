@@ -21,6 +21,15 @@ def search_keys():
     keys = r.keys(param)
     return json.dumps(keys)
 
+@app.route('/keytype', methods=["POST"])
+def key_type():
+    keys = request.form.get('keys', '')
+    res = {}
+    for k in keys.split(','):
+        if k:
+            res[k] = r.type(k)
+    return json.dumps(res)
+
 @app.route('/exec', methods=["POST"])
 def exec_redis_command():
     param = request.form.get('cmd', '')

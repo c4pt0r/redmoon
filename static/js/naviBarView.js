@@ -22,9 +22,8 @@ define([
 			},
 			render : function() {
 				var data = {};
-				var tmpl = render('navibar');
-				var compiledTemplate = _.template( tmpl, data );
-				this.$el.html( compiledTemplate );
+				var tmpl = load_template('navibar');
+				this.$el.html( tmpl );
 				return this;
 			}
 		});
